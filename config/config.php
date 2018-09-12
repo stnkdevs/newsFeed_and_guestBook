@@ -1,5 +1,5 @@
 <?php
-
+$basePath=dirname(__DIR__);
 $config = [
 
 'id' => 'News',
@@ -10,6 +10,7 @@ $config = [
 		'@vendor'=>dirname(dirname(__DIR__)).'/vendor',
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
+		'@images'=>"$basePath/web/images",
     ],
 
 'components'=> [
