@@ -1,10 +1,10 @@
 <?php
 
-namespace app\controllers;
+namespace app\modules\newsfeed\controllers;
 
 use Yii;
 use yii\web\Controller;
-use app\models\News;
+use app\modules\newsfeed\models\News;
 use yii\web\UploadedFile;
 use app\models\User;
 
@@ -42,16 +42,18 @@ class NewsController extends Controller
 		{
 			$user=new User();
 			$user->load(Yii::$app->request->post());
-			if (!$user->validate() || !$user->signIn())
-				return $this->render('/user/login', ['user'=>$user]);
+			if (!$user->validate() || !$user->signIn()){
+				$user->password='';
+				return $this->render('//user/login', ['user'=>$user]);
+			}
 		}
 		else if (!User::isAuthorized())
 		{
-			return $this->render('/user/login', ['user'=>new User()]);
+			return $this->render('//user/login', ['user'=>new User()]);
 		}
 		$user=User::getUser();
 		if (!$user->hasResponse('newsfeed-edit'))
-				return $this->render('user/access_error');
+				return $this->render('//user/access_error');
 		return false;
 		
 	}

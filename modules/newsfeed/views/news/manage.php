@@ -8,7 +8,7 @@ use yii\helpers\Html;
 
 use yii\Helpers\Url;
 
-use app\models\News;
+use app\modules\newsfeed\models\News;
 
 $news=new News();
 
@@ -56,4 +56,4 @@ $news->content=Html::encode($news->content);
 <?=LinkPager::widget(['pagination'=>$pagination]);?>
 <?php endif;?>
 
-<p><?=Html::a("Выйти с учетной записи $user->login", ['user/signout', 'redirect'=>'news/manage'])?></p>
+<p><?=Html::a("Выйти с учетной записи $user->login", ['/user/signout', 'redirect'=>'/newsfeed/news/manage'])?></p>

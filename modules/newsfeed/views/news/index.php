@@ -8,7 +8,7 @@ use yii\helpers\Html;
 
 use yii\Helpers\Url;
 
-use app\models\News;
+use app\modules\newsfeed\models\News;
 
 ?>
 

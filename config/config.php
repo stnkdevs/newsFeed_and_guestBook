@@ -32,6 +32,11 @@ $config = [
 					'rules' => [],
 					],
 				],
+'modules' => [
+        'newsfeed' => [
+            'class' => 'app\modules\newsfeed\Module',
+        ],
+    ],
 				
 ];
 
