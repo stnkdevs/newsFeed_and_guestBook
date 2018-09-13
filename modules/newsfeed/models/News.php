@@ -50,6 +50,7 @@ class News extends ActiveRecord
 			['totalCount'=>$count, 
 			'pageSize'=>$onpage]);
 		$news=$query->offset($pagination->offset)
+		->orderBy(['id'=>SORT_DESC])
 		->limit($pagination->limit)
 		->all();
 		return ['newslist'=>$news, 'pagination'=>$pagination];
@@ -69,7 +70,8 @@ class News extends ActiveRecord
 	
 	public function save($validate=true, $attrs=NULL) {
 		if ($this->imageUpload){
-			$baseName=uniqid();
+			$this->removeImageIfExists();
+			$baseName=uniqid('', true);
 			$extension=$this->imageUpload->extension;
 			$fileName="$baseName.$extension";
 			$path=Yii::getAlias("@images/news/$fileName");
@@ -78,19 +80,23 @@ class News extends ActiveRecord
 		}
 		else
 		{
-			var_dump($this);
 			$this->image=NULL;
 		}
-		parent::save($validate, $attrs);
+		return parent::save($validate, $attrs);
 	}
 	
-	public function beforeDelete(){
-		 if (!parent::beforeDelete()) {
-			return false;
-		}
+	public function removeImageIfExists() {
 		$fname=$this->getImageFileName();
 		if ($fname && file_exists($fname))
 			unlink($fname);
+		$this->image='';
+	}
+	
+	public function beforeDelete(){
+		if (!parent::beforeDelete()) {
+			return false;
+		}
+		$this->removeImageIfExists();
 		return true;
 	}
 

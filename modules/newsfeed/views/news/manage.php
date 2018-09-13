@@ -18,8 +18,9 @@ $user=app\models\User::getUser();
 
 <!-- News adding form -->
 
-
-<div class="news-form">
+<div class="row">
+<div class="col-md-2"></div>
+<div class="col-md-6">
 
     <?php $form = ActiveForm::begin([
 								'action'=>Url::to(['news/add'])
@@ -31,18 +32,24 @@ $user=app\models\User::getUser();
 	
 	<?= $form->field($news, 'imageUpload')->fileInput() ?>
 
-    <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+    <?= Html::submitButton('Добавить новость', ['class' => 'btn btn-success']) ?>
 
     <?php ActiveForm::end(); ?>
 
+</div>
 </div>
 
 
 <!-- /News adding form -->
 
+<div class="row">
+<div class="col-md-2"></div>
+<div class="col-md-6">
 <?php if (!$newslist):?>
 Лента новостей пуста.
-<?php else: foreach($newslist as $news): 
+<?php else:?>
+<h2 align="center">Новости</h2>
+<?php foreach($newslist as $news): 
 $news->title=Html::encode($news->title);
 $news->content=Html::encode($news->content);
 ?>
@@ -55,5 +62,6 @@ $news->content=Html::encode($news->content);
 <?php endforeach;?>
 <?=LinkPager::widget(['pagination'=>$pagination]);?>
 <?php endif;?>
-
-<p><?=Html::a("Выйти с учетной записи $user->login", ['/user/signout', 'redirect'=>'/newsfeed/news/manage'])?></p>
+</div>
+</div>
+<p align="center"><?=Html::a("Выйти с учетной записи $user->login", ['/user/signout', 'redirect'=>'/newsfeed/news/manage'])?></p>

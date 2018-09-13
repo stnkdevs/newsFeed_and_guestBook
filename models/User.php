@@ -8,15 +8,9 @@ class User extends \yii\db\ActiveRecord
 {
 	
 	public function rules(){
-		$regexValidator=
-		function($attr, $params){
-			if (!preg_match($params['regex'], $this->$attr))
-				$this->addError($attr, $params['msg']);
-			
-		};
 		return [
-			[['login'], $regexValidator, 'params'=>['regex'=>'%^[0-9a-z_-]{3,50}$%i', 'msg'=>'Разрешены латиница, цифры, символ подчеркивания и дефис. Длина от 3 до 50 символов']],
-			[['password'], $regexValidator, 'params'=>['regex'=>'%^[0-9a-z_-]{6,50}$%i', 'msg'=>'Разрешены латиница, цифры, символ подчеркивания и дефис. Длина пароля от 6 до 50 символов']],
+			[['login'], 'app\validators\RegexValidator', 'regex'=>'%^[0-9a-z_-]{3,50}$%i', 'msg'=>'Разрешены латиница, цифры, символ подчеркивания и дефис. Длина от 3 до 50 символов'],
+			[['password'], 'app\validators\RegexValidator', 'regex'=>'%^[0-9a-z_-]{6,50}$%i', 'msg'=>'Разрешены латиница, цифры, символ подчеркивания и дефис. Длина пароля от 6 до 50 символов'],
 		];
 	}
 	
@@ -61,7 +55,7 @@ class User extends \yii\db\ActiveRecord
 		else return NULL;
 	}
 	
-	public function hasResponse($response){
+	public function hasResponsibility($response){
 		$responses=explode(';',$this->responses);
 		return in_array($response, $responses);
 	}

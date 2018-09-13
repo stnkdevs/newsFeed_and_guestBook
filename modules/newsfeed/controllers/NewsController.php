@@ -11,6 +11,16 @@ use app\models\User;
 
 class NewsController extends Controller
 {
+	public function behaviors()
+	{
+		return [
+			[
+				'class' => 'app\filters\AccessFilter',
+				'only' => ['manage', 'delete'],
+				'responsibility'=>'newsfeed-edit',
+			],
+		];
+	}
 	
 	protected function findModel($id)
     {
@@ -23,12 +33,14 @@ class NewsController extends Controller
 	
 	public function actionAdd(){
 		$news=new News();
-		
-		if ($news->load(Yii::$app->request->post()) && $news->validate()) {
-			$news->imageUpload = UploadedFile::getInstance($news, 'imageUpload');
-			$news->date=date('Y-m-d');
-			$news->save(false);
-        }		
+		if (Yii::$app->request->isPost) {
+			$news->load(Yii::$app->request->post());
+			if ($news->validate()) {
+				$news->imageUpload = UploadedFile::getInstance($news, 'imageUpload');
+				$news->date=date('Y-m-d');
+				$news->save(false);
+			}
+		}		
         return $this->redirect(['news/manage']);
 	}
 	
@@ -37,46 +49,18 @@ class NewsController extends Controller
 		return $this->render('index', $data);
 	}
 	
-	private function checkAccess(){
-		if (!User::isAuthorized() && Yii::$app->request->isPost) 
-		{
-			$user=new User();
-			$user->load(Yii::$app->request->post());
-			if (!$user->validate() || !$user->signIn()){
-				$user->password='';
-				return $this->render('//user/login', ['user'=>$user]);
-			}
-		}
-		else if (!User::isAuthorized())
-		{
-			return $this->render('//user/login', ['user'=>new User()]);
-		}
-		$user=User::getUser();
-		if (!$user->hasResponse('newsfeed-edit'))
-				return $this->render('//user/access_error');
-		return false;
-		
-	}
-	
-	public function actionManage(){
-		
-		$filterResult=$this->checkAccess();
-		if ($filterResult!==false)
-			return $filterResult;
-		
+	public function actionManage(){	
 		$data=News::getList(5);
 		return $this->render('manage', $data);
 	}
 	
 	public function actionDelete($id){
-		$filterResult=$this->checkAccess();
-		if ($filterResult!==false)
-			return $filterResult;
-		
 		$forRemoving=$this->findModel($id);
 		if ($forRemoving)
 			$forRemoving->delete();
-		return $this->redirect(['news/manage']);
+		$headers=Yii::$app->request->headers;
+		$redirect=$headers->has('Referer')?$headers->get('Referer'):['news/manage'];
+		return $this->redirect($redirect);
 	}
 	
 	public function actionPost($id){

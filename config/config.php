@@ -4,6 +4,8 @@ $config = [
 
 'id' => 'News',
 
+'language' => 'ru-RU',
+
 'basePath'=>dirname(__DIR__),
     
 'aliases' => [
@@ -11,6 +13,7 @@ $config = [
         '@bower' => '@vendor/bower-asset',
         '@npm'   => '@vendor/npm-asset',
 		'@images'=>"$basePath/web/images",
+		'@app'=>$basePath,
     ],
 
 'components'=> [
@@ -36,6 +39,9 @@ $config = [
         'newsfeed' => [
             'class' => 'app\modules\newsfeed\Module',
         ],
+		'gbook' => [
+			'class' => 'app\modules\gbook\Module',
+		],
     ],
 				
 ];
