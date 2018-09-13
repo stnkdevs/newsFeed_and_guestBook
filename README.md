@@ -1,4 +1,4 @@
-# newsFeed_and_guestBook
+# newsFeed_and_guestBook (Yii2 framework)
 
 Модуль Новости:
 
